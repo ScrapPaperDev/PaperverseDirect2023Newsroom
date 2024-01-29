@@ -1,0 +1,65 @@
+News Room Documentation
+
+- If you need guidance or extra tooling or features, consult Scrappie (Discord: Scrappie#7093)
+
+- Easiest way to get started is in the toolbar select NewsRoom > Help. This will populate a list with all timeline assets in the project. Click the one you want to edit and it will open up the timeline window with that one.
+
+- To start a new timeline, go to Timelines folder in the project view and duplicate the TEMPLATE timeline asset. Select "NewsRoomControl" in the Hierarchy and assign the newly duplicated timeline asset to the Playable Director Component's Playable field.
+
+- Because of how things are set up, the main "PlayableDirect" must be attached to the "NewRoomControl" game object. This is setup by default, so no need to change anything.
+
+- There are two cameras in the scene. "CameraRig" and "CamHelper". Cam helper is just to always have a camera set in the proper orientation that it will be for most of the direct. Be sure to disable the "CamHelper" game object when wanting to preview the final output.
+
+- The timeline is built up of several different tracks to give better vertical visualization of all of peppers abilities. (Tried making one monolithic pepper playable where every action was just on one track but it quickly became a nightmare to navigate!)
+
+
+
+PepperRig Track:
+	- The top track that should have the PepperRig (Animator) assigned to the track. This controls Pepper's primary actions for full body animations. These are modular animation that include include an idle and a talking gesture which probably will cover 90% of needed anims. This track should only have animtions prefixed with "Action".
+	- These can be crossfaded to blend between actions.
+	- The PepperRig track contains nested overrides to control the arms, head, and mouth options to be able to mix and match these actions.	
+	- An override anim clip will override the animation playing above it, but because each animation is designed to only operate on certain body parts, it will give more of a blending action than complete override. For example if the primary animation is set to Idle and the arm action is set to slam desk, the idle will still play, but the arm will blend into the slam desk animation.
+	- If you don't see the override tracks, there is a little dropdown arrow to the left of the Pepper Rig track in the timeline window.
+	- The mouth track only has one animation for the mouth, but it does a decent enough job to cover a wide range of "phonemes" in the animation loop that when cut up to match the audio track will give alot of variation. Ideally you should also adjust the "Mouth Texture" track when the mouth anim is playing to an open mouth texture for best results.
+	- Pepper's animations can be found in the project view Pepper>Animations. Clips are prefixed to match the track they should be placed on. Each animation clip should go on the respective track that matches the animation name's prefix. (LeftArm_DeskSlam should go on timeline track Left Arm)
+
+Eye Texture:
+	- This track is for changing the actual sprite of Pepper's eyes. When selecting a texture type "eyes" in the search box to quickly find them. Or Navigate to Pepper > Eyes in the project view to drag and drop.
+
+Eye Position:
+	- This track is used to move Pepper's eyes. Use the sliders to adjust the position. .5 is for center. You can also adjust the "ease in" in the Clip Timing to adjust how fast the movement happens. If no ease out duration is set and there are no follow up clips, the eyes will stay in that position. Set an ease out timing to set them back to center.
+
+Eye Shape:
+	- This track is to fine tune Pepper's eye shape. It is currently pretty limited and only has adjustments to add anger or to partially close one eye or the other. More can be added if needed.
+
+Mouth Texture:
+	- Just like eye texture but for the mouth.
+
+Mouth Position:
+	- Just like eye position but for the mouth.
+
+Pepper Accessory:
+	- This track is to adjust extra facial features and props for Pepper. Simply check all the props you want to appear in the drop down menu. Note that props will retain their state even after the clip has been passed, so you will need follow up clips explicitly turning the props on/off.
+
+Pepper Emotes:
+	- Simply particle systems that play certain symbols like ? or ! above pepper's head. This requires to be in playmode to see changes.
+
+News Room Events:
+	- A generic track for any sort of controls needed. For example changing the screen texture or playing confetti particles, adjusting lights. Anything that is needed will go here. This requires playmode to see changes.
+
+
+- Pepper has an auto blink feature. This can be adjusted by selecting PepperRig in the Hierarchy and adjusting "Blink Length" "Min Time to Next Blink" and "Max Time To Next Blink" in the Pepper component. There is currently no way to blink manually from timeline, but this feature can very easily be added if needed. The system also smartly detects if the eye texture are already closed and will not blink if they are a closed texture. However due to random timings of the blinking, it is possible that a blink will start and then the texture switches halfway. If this becomes an issue, let Scrappie know and they will fix that issue.
+
+
+
+Tips:
+
+- Check the EXAMPLE timeline to see all effects in action.
+
+- The timeline tends to bug out if you are focused on the timeline window and the playhead is not at the start when entering play mode. It seems to run as intended if you set the timeline playhead to the start, unfocus the "NewsRoomControl" gameObject, THEN enter playmode. From there reselect NewsRoomControl to be able to view timeline window and press play from there. (UPDATE: Disableing "Enter Play Mode Options" seems to have fixed this as well. When unchecked it will releoad the scene and scripts when entering playmode. Most likely state from edit mode was being retained in play mode which caused it to bug out.)
+
+- If Pepper's arms look stretched or elongated during playmode you may have to blend out into the "RESET" animation of the respective arm. (UPDATE: This should be fixed now as base actions have keyframes to reset bone positions and scales to default)
+
+- Some Clips will only take effect while in play mode.
+
+- A quick way to add new clips is to simply copy a clip and paste. It will paste right where the play head is. You can also select a clip and press ctrl+d(Windows) to duplicate it instantly. You can also right click anywhere on the track and create a playable clip where you clicked.
